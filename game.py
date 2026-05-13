@@ -11,7 +11,7 @@ def init_game(words_list):
     secret_word = random_word(words_list)
     max_tries = 10
     tries_counter = 0
-    word_view = ["*" * i for i in range(len(secret_word))]    #"-" * len(secret_word)
+    word_view = ["*" for i in range(len(secret_word))]    #"-" * len(secret_word)
     run_mode = True
     return secret_word, max_tries, tries_counter, word_view, run_mode
 
@@ -21,7 +21,7 @@ def is_run(status):
     word_view = status[3]
     run_mode = status[-1]
     max_tries = status[1]
-    if tries_counter == max_tries or "-" not in word_view:
+    if tries_counter == max_tries or "*" not in word_view:
         run_mode = False
     return run_mode
 
