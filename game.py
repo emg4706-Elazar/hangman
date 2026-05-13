@@ -31,9 +31,10 @@ def print_status(status):
     word_view = status[3]
     max_tries = status[1]
     tries_left = max_tries - tries_counter
-    print("=====Status Game=====")
+    print("="*13,"Status Game","="*13)
     print(f"Guess the word: {word_view}")
     print(f"{tries_left}: tries left!")
+    print("="*39)
     print()
 
 
@@ -41,8 +42,6 @@ def is_only_one_char(char):
     is_one = len(char) == 1
     return is_one
 
-def is_a_letter(char):
-    pass
 
 def input_validation(char):
     valid_input = False
@@ -59,6 +58,7 @@ def get_input():
         char.lower()
         valid_input = input_validation(char)
     return char
+
 
 def checking_guess(letter, status):
     secret_word = status[0]
@@ -79,9 +79,23 @@ def update_status(letter ,status):
     return status
 
 
+def main(words_list):
+    status_game = list(init_game(words))
+
+    while is_run(status_game):
+        print_status(status_game)
+        letter_input = get_input()
+        is_correct = checking_guess(letter_input, status_game)
+        if is_correct:
+            status_game = update_status(letter_input, status_game)
+        else:
+            tries_counter = status_game[2]
+            tries_counter += 1
+            status_game[2] = tries_counter
+    return
 
 
-# initialize
+
 words = [
     "tree",
     "window",
@@ -98,22 +112,8 @@ words = [
 ]
 
 
-
-status_game = list(init_game(words))
-
-while is_run(status_game):
-    print_status(status_game)
-    letter_input = get_input()
-    is_correct = checking_guess(letter_input, status_game)
-    if is_correct:
-        status_game = update_status(letter_input, status_game)
-    else:
-        tries_counter = status_game[2]
-        tries_counter += 1
-        status_game[2] = tries_counter
-
-
-
+if __name__ == "__main__":
+    main(words)
 
 
 
