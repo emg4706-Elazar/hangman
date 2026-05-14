@@ -17,7 +17,7 @@ def init_game(words_list):
     return secret_word, max_tries, tries_counter, word_view, run_mode, typing_history
 
 
-def is_run(status):
+def is_run(status)  -> bool:
     tries_counter = status[2]
     word_view = status[3]
     run_mode = status[4]
@@ -66,7 +66,7 @@ def is_a_letter(char)   -> bool:
     return letter
 
 
-def is_typed(letter, status):
+def is_typed(letter, status)  -> bool:
     typing_history = status[5]
     typed = letter in typing_history
     if typed:
@@ -93,7 +93,7 @@ def get_input(status)  -> str:
     return char
 
 
-def append_to_history(letter, status):
+def append_to_history(letter, status)  -> list:
     status[5].append(letter)
     return status
 
@@ -117,22 +117,32 @@ def update_status(letter ,status)  -> list:
     return status
 
 
-def main(words_list):
-    status_game = list(init_game(words_list))
-
-    while is_run(status_game):
-        print_status(status_game)
-        letter_input = get_input(status_game)
-        status_game = append_to_history(letter_input, status_game)
-        is_correct = checking_guess(letter_input, status_game)
+def game_loop(status)  ->list:
+    status = list(status)
+    while is_run(status):
+        print_status(status)
+        letter_input = get_input(status)
+        status = append_to_history(letter_input, status)
+        is_correct = checking_guess(letter_input, status)
         if is_correct:
-            status_game = update_status(letter_input, status_game)
+            status = update_status(letter_input, status)
+            print("Correct Guess")
+            print()
         else:
-            tries_counter = status_game[2]
+            tries_counter = status[2]
             tries_counter += 1
-            status_game[2] = tries_counter
-    return
+            status[2] = tries_counter
+            print("Wrong Guess")
+            print()
+    return status
 
+
+def is_win(status)  -> bool:
+    word_view = status[3]
+    win = False
+    if "*" not in word_view:
+        win = True
+    return win
 
 
 words = [
@@ -152,7 +162,13 @@ words = [
 
 
 if __name__ == "__main__":
-    main(words)
+    new_status_game = init_game(words)
+    final_status = game_loop(new_status_game)
+    if is_win(final_status):
+        print("Congratulations! You guessed the word correctly!")
+    else:
+        sec_word = final_status[0]
+        print(f"Game Over! The correct word was: {sec_word}")
 
 
 
