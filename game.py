@@ -11,19 +11,28 @@ def init_game(words_list):
     secret_word = random_word(words_list)
     max_tries = 10
     tries_counter = 0
-    word_view = ["*" for i in range(len(secret_word))]    #"-" * len(secret_word)
+    word_view = ["*" for i in range(len(secret_word))]
+    typing_history = []
     run_mode = True
-    return secret_word, max_tries, tries_counter, word_view, run_mode
+    return secret_word, max_tries, tries_counter, word_view, run_mode, typing_history
 
 
 def is_run(status):
     tries_counter = status[2]
     word_view = status[3]
-    run_mode = status[-1]
+    run_mode = status[4]
     max_tries = status[1]
     if tries_counter == max_tries or "*" not in word_view:
         run_mode = False
     return run_mode
+
+
+def print_history(status):
+    typing_history = status[5]
+    print("Typing_History:",end="")
+    for letter in typing_history:
+        print(letter,end=" ")
+    print()
 
 
 def print_status(status):
@@ -34,6 +43,7 @@ def print_status(status):
     print("="*13,"Status Game","="*13)
     print(f"Guess the word: {word_view}")
     print(f"{tries_left}: tries left!")
+    print_history(status)
     print("="*39)
     print()
 
@@ -56,21 +66,36 @@ def is_a_letter(char)   -> bool:
     return letter
 
 
-def input_validation(char)   -> bool:
+def is_typed(letter, status):
+    typing_history = status[5]
+    typed = letter in typing_history
+    if typed:
+        print("This letter is already typed")
+        print("Enter a new letter!")
+        print()
+    return typed
+
+
+def input_validation(char, status)   -> bool:
     valid_input = False
-    if is_only_one_char(char) and is_a_letter(char):
+    if is_only_one_char(char) and is_a_letter(char) and not is_typed(char, status):
         valid_input = True
     return valid_input
 
 
-def get_input()  -> str:
+def get_input(status)  -> str:
     valid_input = False
     char = ""
     while not valid_input:
         char = input("Please enter a letter: ")
-        valid_input = input_validation(char)
+        valid_input = input_validation(char, status)
         char.lower()
     return char
+
+
+def append_to_history(letter, status):
+    status[5].append(letter)
+    return status
 
 
 def checking_guess(letter, status)  -> bool:
@@ -97,7 +122,8 @@ def main(words_list):
 
     while is_run(status_game):
         print_status(status_game)
-        letter_input = get_input()
+        letter_input = get_input(status_game)
+        status_game = append_to_history(letter_input, status_game)
         is_correct = checking_guess(letter_input, status_game)
         if is_correct:
             status_game = update_status(letter_input, status_game)
