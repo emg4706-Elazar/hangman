@@ -116,11 +116,16 @@ def update_status(letter ,status)  -> list:
 
 def game_loop(status)  ->list:
     status = list(status)
+
     while is_run(status):
         print_status(status)
+
         letter_input = get_input(status)
+
         status = append_to_history(letter_input, status)
+
         is_correct = checking_guess(letter_input, status)
+
         if is_correct:
             status = update_status(letter_input, status)
             print("Correct Guess\n")
@@ -129,6 +134,7 @@ def game_loop(status)  ->list:
             tries_counter += 1
             status[2] = tries_counter
             print("Wrong Guess\n")
+
     return status
 
 
@@ -138,6 +144,18 @@ def is_win(status)  -> bool:
     if "*" not in word_view:
         win = True
     return win
+
+
+
+
+def main():
+    new_status_game = init_game(WORDS)
+    final_status = game_loop(new_status_game)
+    if is_win(final_status):
+        print("Congratulations! You guessed the word correctly!")
+    else:
+        sec_word = final_status[0]
+        print(f"Game Over! The correct word was: {sec_word}")
 
 
 WORDS = [
@@ -189,13 +207,7 @@ WORDS = [
 
 
 if __name__ == "__main__":
-    new_status_game = init_game(WORDS)
-    final_status = game_loop(new_status_game)
-    if is_win(final_status):
-        print("Congratulations! You guessed the word correctly!")
-    else:
-        sec_word = final_status[0]
-        print(f"Game Over! The correct word was: {sec_word}")
+    main()
 
 
 
