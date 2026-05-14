@@ -38,29 +38,42 @@ def print_status(status):
     print()
 
 
-def is_only_one_char(char):
+def is_only_one_char(char)  -> bool:
     is_one = len(char) == 1
+    if not is_one:
+        print("Invalid input")
+        print("Enter only one letter")
+        print()
     return is_one
 
 
-def input_validation(char):
+def is_a_letter(char)   -> bool:
+    letter : bool = char.isalpha()
+    if not letter:
+        print("Invalid input")
+        print("Enter only letters")
+        print()
+    return letter
+
+
+def input_validation(char)   -> bool:
     valid_input = False
-    if is_only_one_char(char) and char.isalpha():
+    if is_only_one_char(char) and is_a_letter(char):
         valid_input = True
     return valid_input
 
 
-def get_input():
+def get_input()  -> str:
     valid_input = False
     char = ""
     while not valid_input:
         char = input("Please enter a letter: ")
-        char.lower()
         valid_input = input_validation(char)
+        char.lower()
     return char
 
 
-def checking_guess(letter, status):
+def checking_guess(letter, status)  -> bool:
     secret_word = status[0]
     correct_guess = False
     for i in range(len(secret_word)):
@@ -69,7 +82,7 @@ def checking_guess(letter, status):
     return correct_guess
 
 
-def update_status(letter ,status):
+def update_status(letter ,status)  -> list:
     word_view = status[3]
     secret_word = status[0]
     for i in range(len(secret_word)):
@@ -80,7 +93,7 @@ def update_status(letter ,status):
 
 
 def main(words_list):
-    status_game = list(init_game(words))
+    status_game = list(init_game(words_list))
 
     while is_run(status_game):
         print_status(status_game)
